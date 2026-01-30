@@ -1,70 +1,163 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Bullion Exchange Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Bullion Exchange | Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
 body{
-  background:#0b0b0b;
+  margin:0;
+  height:100vh;
+  background:radial-gradient(circle at top,#1a1a1a,#000);
+  font-family:Montserrat,sans-serif;
   color:#f5e6c8;
-  font-family:Montserrat;
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
 }
-.panel{
+
+/* LOCK SCREEN */
+.lock{
   background:#111;
   padding:40px;
-  border-radius:20px;
+  border-radius:22px;
   width:320px;
   text-align:center;
+  box-shadow:0 25px 60px rgba(0,0,0,.7);
 }
-h1{
-  font-family:Playfair Display;
+
+.lock h1{
+  font-family:'Playfair Display',serif;
   color:#d4af37;
+  margin-bottom:10px;
 }
-input{
+
+.lock p{
+  font-size:13px;
+  color:#bfa76a;
+  margin-bottom:20px;
+}
+
+.lock input{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  margin-bottom:15px;
+  font-size:14px;
+}
+
+.lock button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:25px;
+  background:#d4af37;
+  cursor:pointer;
+  font-weight:500;
+}
+
+/* ADMIN PANEL */
+.panel{
+  display:none;
+  background:#111;
+  padding:40px;
+  border-radius:22px;
+  width:360px;
+  text-align:center;
+  box-shadow:0 25px 60px rgba(0,0,0,.7);
+}
+
+.panel h1{
+  font-family:'Playfair Display',serif;
+  color:#d4af37;
+  margin-bottom:20px;
+}
+
+.panel input{
   width:100%;
   padding:12px;
   margin:10px 0;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
+  font-size:14px;
 }
-button{
+
+.panel button{
   margin-top:20px;
-  padding:12px;
   width:100%;
-  background:#d4af37;
+  padding:12px;
   border:none;
-  border-radius:20px;
+  border-radius:25px;
+  background:#d4af37;
   cursor:pointer;
+  font-weight:500;
+}
+
+.note{
+  font-size:12px;
+  margin-top:15px;
+  color:#bfa76a;
 }
 </style>
 </head>
 
 <body>
-<div class="panel">
-<h1>Admin Panel</h1>
-<input id="gold" placeholder="Gold Price">
-<input id="silver" placeholder="Silver Price">
-<input id="copper" placeholder="Copper Price">
-<button onclick="save()">Update Market</button>
+
+<!-- LOCK SCREEN -->
+<div class="lock" id="lockScreen">
+  <h1>Bullion Exchange</h1>
+  <p>Authorized Admin Access</p>
+  <input type="password" id="password" placeholder="Enter Admin Password">
+  <button onclick="unlock()">Unlock</button>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="panel" id="adminPanel">
+  <h1>Market Update</h1>
+
+  <input id="gold" placeholder="Gold Price">
+  <input id="silver" placeholder="Silver Price">
+  <input id="copper" placeholder="Copper Price">
+
+  <button onclick="updateMarket()">Update Prices</button>
+
+  <div class="note">
+    Prices update globally with current IST time.
+  </div>
 </div>
 
 <script>
+/* 🔐 CHANGE PASSWORD HERE */
+const ADMIN_PASSWORD = "Bullionexchange@matangi";
+
+/* 🔗 GOOGLE APPS SCRIPT URL */
 const API_URL = "PASTE_GOOGLE_SCRIPT_URL";
 
-function save(){
+function unlock(){
+  if(password.value === ADMIN_PASSWORD){
+    lockScreen.style.display="none";
+    adminPanel.style.display="block";
+  } else {
+    alert("Access Denied");
+  }
+}
+
+function updateMarket(){
   fetch(API_URL,{
     method:"POST",
     body:JSON.stringify({
-      gold:gold.value,
-      silver:silver.value,
-      copper:copper.value
+      gold: gold.value,
+      silver: silver.value,
+      copper: copper.value
     })
-  }).then(()=>alert("Market Updated"));
+  })
+  .then(()=>alert("Market Updated Successfully"));
 }
 </script>
+
 </body>
 </html>
