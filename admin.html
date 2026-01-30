@@ -2,162 +2,265 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Bullion Exchange | Admin</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bullion Exchange – Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
+:root{
+  --bg:#141820;
+  --panel:#1e2430;
+  --border:#2e3545;
+  --text:#e7eaee;
+  --muted:#9aa4b2;
+  --green:#22c55e;
+  --red:#ef4444;
+  --grey:#9ca3af;
+}
+
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  height:100vh;
-  background:radial-gradient(circle at top,#1a1a1a,#000);
-  font-family:Montserrat,sans-serif;
-  color:#f5e6c8;
+  font-family:Inter,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* LOGIN */
+.login{
+  max-width:360px;
+  margin:20vh auto;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:24px;
+}
+.login h2{
+  margin:0 0 16px;
+  font-size:18px;
+}
+.login input{
+  width:100%;
+  padding:10px;
+  margin-bottom:12px;
+  background:#0f131a;
+  border:1px solid var(--border);
+  color:var(--text);
+  border-radius:8px;
+}
+.login button{
+  width:100%;
+  padding:10px;
+  background:var(--green);
+  border:none;
+  border-radius:8px;
+  font-weight:600;
+}
+
+/* HEADER */
+.header{
+  padding:14px 20px;
+  border-bottom:1px solid var(--border);
   display:flex;
-  justify-content:center;
+  justify-content:space-between;
   align-items:center;
 }
-
-/* LOCK SCREEN */
-.lock{
-  background:#111;
-  padding:40px;
-  border-radius:22px;
-  width:320px;
-  text-align:center;
-  box-shadow:0 25px 60px rgba(0,0,0,.7);
+.header h1{
+  font-size:16px;
+  font-weight:500;
 }
 
-.lock h1{
-  font-family:'Playfair Display',serif;
-  color:#d4af37;
-  margin-bottom:10px;
+/* LAYOUT */
+.container{
+  max-width:1100px;
+  margin:24px auto;
+  padding:0 16px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
 }
 
-.lock p{
+/* CARD */
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+}
+.card h3{
+  margin:0 0 12px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+/* INPUTS */
+input,textarea,select{
+  width:100%;
+  padding:10px;
+  background:#0f131a;
+  border:1px solid var(--border);
+  color:var(--text);
+  border-radius:8px;
   font-size:13px;
-  color:#bfa76a;
-  margin-bottom:20px;
 }
 
-.lock input{
+/* BUTTON */
+.btn{
+  margin-top:14px;
+  padding:10px;
   width:100%;
-  padding:12px;
-  border-radius:10px;
+  background:var(--green);
   border:none;
-  margin-bottom:15px;
-  font-size:14px;
-}
-
-.lock button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:25px;
-  background:#d4af37;
+  border-radius:8px;
+  font-weight:600;
   cursor:pointer;
-  font-weight:500;
 }
 
-/* ADMIN PANEL */
-.panel{
+/* MODAL */
+.modal{
   display:none;
-  background:#111;
-  padding:40px;
-  border-radius:22px;
-  width:360px;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+}
+.modal-box{
+  background:var(--panel);
+  max-width:360px;
+  margin:20% auto;
+  padding:20px;
+  border-radius:14px;
+  border:1px solid var(--border);
   text-align:center;
-  box-shadow:0 25px 60px rgba(0,0,0,.7);
+}
+.modal-box button{
+  padding:8px 16px;
+  margin:8px;
 }
 
-.panel h1{
-  font-family:'Playfair Display',serif;
-  color:#d4af37;
-  margin-bottom:20px;
-}
-
-.panel input{
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border:none;
-  border-radius:10px;
-  font-size:14px;
-}
-
-.panel button{
-  margin-top:20px;
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:25px;
-  background:#d4af37;
-  cursor:pointer;
-  font-weight:500;
-}
-
-.note{
-  font-size:12px;
-  margin-top:15px;
-  color:#bfa76a;
+/* TOAST */
+.toast{
+  display:none;
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:var(--green);
+  padding:10px 16px;
+  border-radius:8px;
+  font-size:13px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOCK SCREEN -->
-<div class="lock" id="lockScreen">
-  <h1>Bullion Exchange</h1>
-  <p>Authorized Admin Access</p>
-  <input type="password" id="password" placeholder="Enter Admin Password">
-  <button onclick="unlock()">Unlock</button>
+<!-- LOGIN -->
+<div class="login" id="loginBox">
+  <h2>Admin Login</h2>
+  <input type="password" id="password" placeholder="Enter admin password">
+  <button onclick="login()">Login</button>
 </div>
 
-<!-- ADMIN PANEL -->
-<div class="panel" id="adminPanel">
-  <h1>Market Update</h1>
+<!-- ADMIN -->
+<div id="adminPanel" style="display:none">
 
-  <input id="gold" placeholder="Gold Price">
-  <input id="silver" placeholder="Silver Price">
-  <input id="copper" placeholder="Copper Price">
+  <div class="header">
+    <h1>Bullion Exchange – Admin Panel</h1>
+    <div id="lastUpdated" style="font-size:12px;color:var(--muted)">—</div>
+  </div>
 
-  <button onclick="updateMarket()">Update Prices</button>
+  <div class="container">
 
-  <div class="note">
-    Prices update globally with current IST time.
+    <div class="grid">
+
+      <div class="card">
+        <h3>Update Prices</h3>
+        <input id="gold" placeholder="Gold Price">
+        <input id="silver" placeholder="Silver Price">
+        <input id="copper" placeholder="Copper Price">
+      </div>
+
+      <div class="card">
+        <h3>Market Status</h3>
+        <select id="market">
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+          <option value="holiday">Holiday</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <h3>About Company</h3>
+        <textarea id="about" rows="5"></textarea>
+      </div>
+
+      <div class="card">
+        <h3>Legal Disclaimer</h3>
+        <textarea id="disclaimer" rows="5"></textarea>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="openConfirm()">Update All</button>
+
   </div>
 </div>
 
+<!-- CONFIRM MODAL -->
+<div class="modal" id="confirmModal">
+  <div class="modal-box">
+    <h3>Confirm Update</h3>
+    <p style="font-size:13px;color:var(--muted)">Are you sure you want to apply changes?</p>
+    <button onclick="closeConfirm()">Cancel</button>
+    <button onclick="submitData()" style="background:var(--green);border:none">Confirm</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Updated successfully ✔</div>
+
 <script>
-/* 🔐 CHANGE PASSWORD HERE */
-const ADMIN_PASSWORD = "Bullionexchange@matangi";
-
-/* 🔗 GOOGLE APPS SCRIPT URL */
 const API_URL = "https://script.google.com/macros/s/AKfycbzLuzNFl0G77hfBCSpiMaEg6b8_yqsXobBlrYmvNZLpXTp6ScehlpkNGI0w4ZpPME94Gw/exec";
+const ADMIN_PASS = "1234"; // CHANGE THIS
 
-function unlock(){
-  if(password.value === ADMIN_PASSWORD){
-    lockScreen.style.display="none";
+function login(){
+  if(password.value === ADMIN_PASS){
+    loginBox.style.display="none";
     adminPanel.style.display="block";
-  } else {
-    alert("Access Denied");
+  }else{
+    alert("Wrong password");
   }
 }
 
-function updateMarket(){
+function openConfirm(){
+  confirmModal.style.display="block";
+}
+function closeConfirm(){
+  confirmModal.style.display="none";
+}
+
+function submitData(){
+  closeConfirm();
+
   fetch(API_URL,{
     method:"POST",
     body:JSON.stringify({
-      gold: gold.value,
-      silver: silver.value,
-      copper: copper.value
+      gold:gold.value,
+      silver:silver.value,
+      copper:copper.value,
+      market:market.value,
+      about:about.value,
+      disclaimer:disclaimer.value
     })
-  })
-  .then(()=>alert("Market Updated Successfully"));
+  }).then(()=>{
+    toast.style.display="block";
+    setTimeout(()=>toast.style.display="none",2000);
+  });
 }
 </script>
 
 </body>
-</html>
+  </html>
+  
