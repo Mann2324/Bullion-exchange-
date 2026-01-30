@@ -3,212 +3,262 @@
 <head>
 <meta charset="UTF-8">
 <title>Bullion Exchange</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
+:root{
+  --bg:#121417;
+  --panel:#1c2129;
+  --border:#2a2f38;
+  --text:#e6e8eb;
+  --muted:#9aa4b2;
+  --accent:#c9a24d;
+}
+
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  font-family:Montserrat,sans-serif;
-  background:#0b0b0b;
-  color:#f5e6c8;
+  font-family:Inter,sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
 
-/* TOP TAGLINE */
-.ticker{
-  background:#000;
-  color:#d4af37;
-  padding:12px 0;
-  overflow:hidden;
-  white-space:nowrap;
+/* TOP BAR */
+.topbar{
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+  padding:8px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:13px;
 }
+
+.brand{
+  font-weight:500;
+  letter-spacing:.3px;
+}
+
+.status{
+  color:var(--muted);
+}
+
+/* TICKER */
+.ticker{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+  overflow:hidden;
+}
+
 .ticker span{
   display:inline-block;
-  padding-left:100%;
-  animation:scroll 18s linear infinite;
-}
-@keyframes scroll{
-  from{transform:translateX(0);}
-  to{transform:translateX(-100%);}
-}
-
-/* BRAND */
-.header{
-  text-align:center;
-  padding:40px 20px 20px;
-}
-.header h1{
-  font-family:Playfair Display,serif;
-  font-size:42px;
-  color:#d4af37;
-  margin:0;
-}
-.market-status{
-  margin-top:10px;
-  font-size:14px;
-}
-
-/* PRICES */
-.prices{
-  display:flex;
-  justify-content:center;
-  gap:30px;
-  flex-wrap:wrap;
-  margin-top:40px;
-}
-.card{
-  background:#111;
-  padding:30px;
-  width:260px;
-  border-radius:18px;
-  text-align:center;
-}
-.card h2{
-  font-family:Playfair Display,serif;
-  color:#d4af37;
-}
-.price{
-  font-size:32px;
-}
-.up{color:#00c389}
-.down{color:#ff4d4d}
-.same{color:#aaa}
-
-/* UPDATED TIME */
-.updated{
-  text-align:center;
-  margin-top:30px;
+  padding:6px 100%;
   font-size:13px;
-  color:#bfa76a;
+  color:var(--muted);
+  animation:scroll 32s linear infinite;
 }
 
-/* HISTORY */
-.history{
-  max-width:900px;
-  margin:80px auto 40px;
-  padding:0 20px;
+@keyframes scroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-100%)}
 }
-.history h3{
-  font-family:Playfair Display,serif;
-  color:#d4af37;
+
+/* CONTAINER */
+.container{
+  max-width:1100px;
+  margin:20px auto;
+  padding:0 16px;
 }
+
+/* CARDS */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+}
+
+.card h3{
+  margin:0;
+  font-size:13px;
+  font-weight:500;
+  color:var(--muted);
+}
+
+.price{
+  margin-top:8px;
+  font-size:22px;
+  font-weight:600;
+}
+
+/* META */
+.meta{
+  margin:16px 2px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+/* SECTION */
+.section{
+  margin-top:34px;
+}
+
+.section h2{
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+/* TABLE */
+.table-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
 }
-td,th{
-  padding:10px;
-  border-bottom:1px solid #222;
+
+th,td{
+  padding:10px 12px;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+
+th{
+  background:#181c23;
+  font-weight:500;
+  color:var(--muted);
 }
 
 /* NEWS */
-.news{
-  max-width:900px;
-  margin:60px auto;
-  padding:0 20px;
-}
-.news h3{
-  font-family:Playfair Display,serif;
-  color:#d4af37;
-}
-.news p{
-  font-size:14px;
-  color:#ccc;
+.news-item{
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+  color:var(--muted);
 }
 
 /* FOOTER */
 footer{
+  margin:50px 0 20px;
   text-align:center;
-  padding:30px;
-  font-size:13px;
-  color:#888;
+  font-size:12px;
+  color:var(--muted);
 }
 </style>
 </head>
 
 <body>
 
+<div class="topbar">
+  <div class="brand">Bullion Exchange</div>
+  <div class="status" id="marketStatus"></div>
+</div>
+
 <div class="ticker">
-  <span id="tickerText">Loading market data...</span>
+  <span id="ticker">Loading market data…</span>
 </div>
 
-<div class="header">
-  <h1>Bullion Exchange</h1>
-  <div class="market-status" id="marketStatus"></div>
-</div>
+<div class="container">
 
-<div class="prices" id="priceCards"></div>
+  <div class="cards" id="priceCards"></div>
 
-<div class="updated">
-  Last Updated: <span id="updatedTime">--</span>
-</div>
+  <div class="meta">
+    Last Updated: <span id="updated">--</span>
+  </div>
 
-<div class="history">
-  <h3>Last 5 Updates</h3>
-  <table id="historyTable"></table>
-</div>
+  <div class="section">
+    <h2><i data-lucide="clock"></i> Price History</h2>
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Gold</th>
+            <th>Silver</th>
+            <th>Copper</th>
+          </tr>
+        </thead>
+        <tbody id="history"></tbody>
+      </table>
+    </div>
+  </div>
 
-<div class="news">
-  <h3>Market News</h3>
-  <p id="newsText">Loading latest gold & silver news…</p>
+  <div class="section">
+    <h2><i data-lucide="newspaper"></i> Market News</h2>
+    <div id="news"></div>
+  </div>
+
 </div>
 
 <footer>
-  Bullion Exchange is a premium market reference platform for Gold, Silver & Copper.<br>
-  © Bullion Exchange • A Matangi Group Company
+  © Bullion Exchange — A Matangi Group Company
 </footer>
 
 <script>
+lucide.createIcons();
+
 const API_URL = "https://script.google.com/macros/s/AKfycbzLuzNFl0G77hfBCSpiMaEg6b8_yqsXobBlrYmvNZLpXTp6ScehlpkNGI0w4ZpPME94Gw/exec";
+const NEWS_API_KEY = "2aca9d2047854078b8f326e718ad5dc7";
 
-fetch(API_URL).then(r=>r.json()).then(data=>{
-  const metals = ["Gold","Silver","Copper"];
-  const prices = data.current;
-  const history = data.history;
+// Prices
+fetch(API_URL)
+.then(r=>r.json())
+.then(data=>{
+  const { current, history } = data;
 
-  // Market Status
-  const day = new Date().getDay();
-  marketStatus.innerHTML = day==0||day==6
-    ? "<span class='down'>● Market Closed</span>"
-    : "<span class='up'>● Market Open</span>";
+  priceCards.innerHTML = `
+    <div class="card"><h3>Gold</h3><div class="price">₹ ${current.gold}</div></div>
+    <div class="card"><h3>Silver</h3><div class="price">₹ ${current.silver}</div></div>
+    <div class="card"><h3>Copper</h3><div class="price">₹ ${current.copper}</div></div>
+  `;
 
-  // Prices
-  priceCards.innerHTML="";
-  metals.forEach(m=>{
-    const diff = prices[m].change;
-    const cls = diff>0?"up":diff<0?"down":"same";
-    priceCards.innerHTML+=`
-      <div class="card">
-        <h2>${m}</h2>
-        <div class="price">₹ ${prices[m].price}
-          <span class="${cls}">${diff>0?"▲":diff<0?"▼":"▬"}</span>
-        </div>
-      </div>`;
-  });
+  updated.innerText = current.updated;
 
-  // Updated Time
-  updatedTime.innerText = prices.updated;
+  marketStatus.innerText =
+    ([0,6].includes(new Date().getDay())) ? "Market Closed" : "Market Open";
 
-  // Ticker
-  tickerText.innerText =
-    `Bullion Exchange • Gold ₹${prices.Gold.price} ${prices.Gold.change>0?"▲":prices.Gold.change<0?"▼":"▬"} | Silver ₹${prices.Silver.price} | Copper ₹${prices.Copper.price}`;
+  ticker.innerText =
+    `Bullion Exchange | Gold ₹${current.gold} | Silver ₹${current.silver} | Copper ₹${current.copper}`;
 
-  // History
-  historyTable.innerHTML = `
-    <tr><th>Date</th><th>Gold</th><th>Silver</th><th>Copper</th></tr>`;
   history.forEach(h=>{
-    historyTable.innerHTML+=`
+    history.innerHTML += `
       <tr>
         <td>${h.date}</td>
-        <td>₹${h.Gold.price} ${h.Gold.icon}</td>
-        <td>₹${h.Silver.price} ${h.Silver.icon}</td>
-        <td>₹${h.Copper.price} ${h.Copper.icon}</td>
+        <td>₹ ${h.gold}</td>
+        <td>₹ ${h.silver}</td>
+        <td>₹ ${h.copper}</td>
       </tr>`;
   });
+});
 
-  // News
-  newsText.innerText = data.news;
+// News
+fetch(`https://newsapi.org/v2/everything?q=gold%20OR%20silver&language=en&sortBy=publishedAt&pageSize=6&apiKey=${NEWS_API_KEY}`)
+.then(r=>r.json())
+.then(n=>{
+  n.articles.forEach(a=>{
+    news.innerHTML += `<div class="news-item">${a.title}</div>`;
+  });
 });
 </script>
 
