@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bullion Exchange Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Montserrat&display=swap" rel="stylesheet">
+<style>
+body{
+  background:#0b0b0b;
+  color:#f5e6c8;
+  font-family:Montserrat;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.panel{
+  background:#111;
+  padding:40px;
+  border-radius:20px;
+  width:320px;
+  text-align:center;
+}
+h1{
+  font-family:Playfair Display;
+  color:#d4af37;
+}
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border:none;
+  border-radius:8px;
+}
+button{
+  margin-top:20px;
+  padding:12px;
+  width:100%;
+  background:#d4af37;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+<div class="panel">
+<h1>Admin Panel</h1>
+<input id="gold" placeholder="Gold Price">
+<input id="silver" placeholder="Silver Price">
+<input id="copper" placeholder="Copper Price">
+<button onclick="save()">Update Market</button>
+</div>
+
+<script>
+const API_URL = "PASTE_GOOGLE_SCRIPT_URL";
+
+function save(){
+  fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      gold:gold.value,
+      silver:silver.value,
+      copper:copper.value
+    })
+  }).then(()=>alert("Market Updated"));
+}
+</script>
+</body>
+</html>
