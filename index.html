@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
 
 <style>
 :root{
@@ -15,11 +15,9 @@
   --border:#2e3545;
   --text:#e7eaee;
   --muted:#9aa4b2;
-
   --green:#22c55e;
   --red:#ef4444;
   --grey:#9ca3af;
-
   --gold:#d4af37;
   --silver:#cfd4dc;
   --copper:#d08c60;
@@ -53,29 +51,16 @@ body{
 .brand-btn{
   background:none;
   border:none;
-  padding:0;
   font:inherit;
-  font-weight:500;
+  font-weight:600;
   cursor:pointer;
   color:var(--text);
 }
-.status{
-  font-size:13px;
-  color:var(--muted);
-}
-.dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  display:inline-block;
-  margin-right:6px;
-}
+.status{font-size:13px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
 
 /* TICKER */
 .ticker{
-  position:sticky;
-  top:0;
-  z-index:10;
   background:var(--panel);
   border-bottom:1px solid var(--border);
   height:34px;
@@ -86,9 +71,9 @@ body{
 .ticker-track{
   display:inline-flex;
   gap:48px;
-  white-space:nowrap;
   padding-right:100%;
-  animation:tickerMove 50s linear infinite;
+  white-space:nowrap;
+  animation:tickerMove 55s linear infinite;
   font-size:12px;
 }
 @keyframes tickerMove{
@@ -120,22 +105,11 @@ body{
   cursor:pointer;
 }
 .card.active{border-color:var(--gold)}
-.card h3{
-  margin:0;
-  font-size:13px;
-  color:var(--muted);
-}
-.price{
-  font-size:26px;
-  font-weight:600;
-  margin-top:6px;
-}
-.change{
-  font-size:13px;
-  margin-top:4px;
-}
+.card h3{margin:0;font-size:13px;color:var(--muted)}
+.price{font-size:26px;font-weight:600;margin-top:6px}
+.change{font-size:13px;margin-top:4px}
 
-/* LAST UPDATED */
+/* LAST UPDATE */
 .last-update{
   margin:10px 6px 0;
   font-size:13px;
@@ -157,47 +131,40 @@ body{
 }
 .chart-summary .up{color:var(--green)}
 .chart-summary .down{color:var(--red)}
-.chart-summary .flat{color:var(--muted)}
 
 /* TABLE */
 .table-box{
   background:var(--panel);
   border:1px solid var(--border);
   border-radius:18px;
-  overflow:hidden;
   margin-top:32px;
+  overflow:hidden;
 }
-table{
-  width:100%;
-  border-collapse:collapse;
-}
+table{width:100%;border-collapse:collapse}
 th,td{
   padding:12px;
   border-bottom:1px solid var(--border);
   font-size:13px;
 }
-th{
-  color:var(--muted);
-  font-weight:500;
-}
+th{color:var(--muted)}
 
-/* NEWS */
-.news-box{
+/* SECTIONS */
+.section{
   background:var(--panel);
   border:1px solid var(--border);
   border-radius:18px;
   padding:18px;
   margin-top:32px;
 }
-.news-box h2{
+.section h2{
   font-size:14px;
-  margin:0 0 12px;
+  margin:0 0 10px;
 }
-.news-box p{
+.section p{
   font-size:13px;
   color:var(--muted);
-  padding:8px 0;
-  border-bottom:1px solid var(--border);
+  line-height:1.6;
+  margin-bottom:8px;
 }
 
 /* FOOTER */
@@ -218,7 +185,7 @@ footer{
 </div>
 
 <div class="ticker">
-  <div class="ticker-track" id="tickerTrack">Loading market prices…</div>
+  <div class="ticker-track" id="tickerTrack">Loading prices…</div>
 </div>
 
 <div class="container">
@@ -242,9 +209,7 @@ footer{
     </div>
   </div>
 
-  <div class="last-update">
-    Last Updated: <span id="updated">--</span>
-  </div>
+  <div class="last-update">Last Updated: <span id="updated">--</span></div>
 
   <!-- CHART -->
   <div class="chart-box">
@@ -252,31 +217,37 @@ footer{
     <canvas id="priceChart" height="140"></canvas>
   </div>
 
-  <!-- HISTORY -->
+  <!-- TABLE -->
   <div class="table-box">
     <table>
       <thead>
-        <tr>
-          <th>Date</th>
-          <th>Gold</th>
-          <th>Silver</th>
-          <th>Copper</th>
-        </tr>
+        <tr><th>Date</th><th>Gold</th><th>Silver</th><th>Copper</th></tr>
       </thead>
       <tbody id="historyTable"></tbody>
     </table>
   </div>
 
   <!-- NEWS -->
-  <div class="news-box">
+  <div class="section">
     <h2>Market News</h2>
     <div id="news"></div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="section">
+    <h2>About Bullion Exchange</h2>
+    <p id="aboutText"></p>
+  </div>
+
+  <!-- LEGAL -->
+  <div class="section">
+    <h2>Legal Disclaimer</h2>
+    <p id="legalText"></p>
   </div>
 
 </div>
 
 <footer>
-  Prices are indicative only. Actual prices may vary.<br>
   © Bullion Exchange — A Matangi Group Company
 </footer>
 
@@ -299,7 +270,7 @@ function toggleTheme(){
   }
 }
 
-/* FETCH DATA */
+/* FETCH */
 fetch(API_URL).then(r=>r.json()).then(d=>{
   const c=d.current; history=d.history||[];
 
@@ -307,6 +278,11 @@ fetch(API_URL).then(r=>r.json()).then(d=>{
   silverPrice.textContent=c.silver;
   copperPrice.textContent=c.copper;
   updated.textContent=c.updated;
+
+  aboutText.textContent=d.about || "—";
+  legalText.textContent=d.disclaimer || "—";
+
+  (d.news||[]).forEach(n=>news.innerHTML+=`<p>${n}</p>`);
 
   calc("gold",c.gold,history[0]?.gold);
   calc("silver",c.silver,history[0]?.silver);
@@ -316,8 +292,6 @@ fetch(API_URL).then(r=>r.json()).then(d=>{
   drawChart();
   fillTable();
   setMarket();
-
-  (d.news||[]).forEach(n=>news.innerHTML+=`<p>${n}</p>`);
 });
 
 /* PRICE CHANGE */
@@ -337,9 +311,7 @@ function buildTicker(c,h){
     tick("Gold",c.gold,p.gold),
     tick("Silver",c.silver,p.silver),
     tick("Copper",c.copper,p.copper),
-    tick("Gold",c.gold,p.gold),
-    tick("Silver",c.silver,p.silver),
-    tick("Copper",c.copper,p.copper)
+    tick("Gold",c.gold,p.gold)
   ].join("");
 }
 function tick(n,c,p){
@@ -351,7 +323,7 @@ function tick(n,c,p){
   </div>`;
 }
 
-/* CHART */
+/* CHART – FIXED TOOLTIP */
 function drawChart(){
   const prices=history.map(h=>h[activeMetal]);
   const dates=history.map(h=>h.date);
@@ -368,24 +340,28 @@ function drawChart(){
         borderColor:
           activeMetal==="gold"? "#d4af37":
           activeMetal==="silver"? "#cfd4dc":"#d08c60",
-        tension:.35,
-        pointRadius:0
+        pointRadius:0,
+        tension:0.35
       }]
     },
     options:{
+      interaction:{mode:"index",intersect:false},
       plugins:{
         legend:{display:false},
         tooltip:{
+          enabled:true,
           callbacks:{
-            title:c=>c[0].label,
-            label:c=>{
-              const i=c.dataIndex;
-              const cur=prices[i], prev=prices[i-1];
+            title:(ctx)=>ctx[0].label,
+            label:(ctx)=>{
+              const i=ctx.dataIndex;
+              const cur=prices[i];
+              const prev=prices[i-1];
               if(!prev) return `₹ ${cur}`;
-              const diff=cur-prev, pct=((diff/prev)*100).toFixed(2);
+              const diff=cur-prev;
+              const pct=((diff/prev)*100).toFixed(2);
               return [
                 `Price: ₹ ${cur}`,
-                `${diff>0?"+":"-"}₹ ${Math.abs(diff)} (${Math.abs(pct)}%)`
+                `${diff>0?"+":"-"}₹${Math.abs(diff)} (${Math.abs(pct)}%)`
               ];
             }
           }
@@ -399,14 +375,12 @@ function drawChart(){
   });
 }
 
-/* SUMMARY */
 function updateSummary(cur,prev){
   if(!prev){chartSummary.textContent=`₹ ${cur}`;return}
   const diff=cur-prev, pct=((diff/prev)*100).toFixed(2);
-  const cls=diff>0?"up":diff<0?"down":"flat";
   chartSummary.innerHTML=`₹ ${cur}
-    <span class="${cls}" style="font-size:14px;margin-left:8px">
-      ${diff>0?"+":"-"}₹ ${Math.abs(diff)} (${Math.abs(pct)}%)
+    <span class="${diff>0?"up":"down"}" style="font-size:14px;margin-left:8px">
+      ${diff>0?"+":"-"}₹${Math.abs(diff)} (${Math.abs(pct)}%)
     </span>`;
 }
 
@@ -433,7 +407,6 @@ function setMarket(){
           `<span class="dot" style="background:var(--green)"></span>Open`;
 }
 
-/* SWITCH METAL */
 function selectMetal(m){
   activeMetal=m;
   document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
