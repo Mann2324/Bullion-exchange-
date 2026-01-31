@@ -25,6 +25,14 @@
   --copper:#d08c60;
 }
 
+[data-theme="light"]{
+  --bg:#f3f4f6;
+  --panel:#ffffff;
+  --border:#d1d5db;
+  --text:#111827;
+  --muted:#4b5563;
+}
+
 *{box-sizing:border-box}
 body{
   margin:0;
@@ -42,9 +50,26 @@ body{
   justify-content:space-between;
   align-items:center;
 }
-.brand{font-weight:500}
-.status{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
-.dot{width:8px;height:8px;border-radius:50%}
+.brand-btn{
+  background:none;
+  border:none;
+  padding:0;
+  font:inherit;
+  font-weight:500;
+  cursor:pointer;
+  color:var(--text);
+}
+.status{
+  font-size:13px;
+  color:var(--muted);
+}
+.dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  display:inline-block;
+  margin-right:6px;
+}
 
 /* TICKER */
 .ticker{
@@ -63,14 +88,13 @@ body{
   gap:48px;
   white-space:nowrap;
   padding-right:100%;
-  animation:tickerMove 22s linear infinite;
+  animation:tickerMove 50s linear infinite;
   font-size:12px;
 }
 @keyframes tickerMove{
   from{transform:translateX(100%)}
   to{transform:translateX(-100%)}
 }
-.tick-item{display:flex;align-items:center;gap:8px}
 .tick-up{color:var(--green)}
 .tick-down{color:var(--red)}
 .tick-flat{color:var(--grey)}
@@ -78,11 +102,11 @@ body{
 /* LAYOUT */
 .container{
   max-width:1150px;
-  margin:20px auto;
+  margin:22px auto;
   padding:0 16px;
 }
 
-/* CARDS */
+/* PRICE CARDS */
 .cards{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -91,57 +115,90 @@ body{
 .card{
   background:var(--panel);
   border:1px solid var(--border);
-  border-radius:14px;
+  border-radius:16px;
   padding:16px;
   cursor:pointer;
 }
 .card.active{border-color:var(--gold)}
-.card h3{margin:0;font-size:13px;color:var(--muted)}
-.price{font-size:26px;font-weight:600;margin-top:6px}
-.change{font-size:13px;margin-top:4px}
+.card h3{
+  margin:0;
+  font-size:13px;
+  color:var(--muted);
+}
+.price{
+  font-size:26px;
+  font-weight:600;
+  margin-top:6px;
+}
+.change{
+  font-size:13px;
+  margin-top:4px;
+}
 
-/* META */
-.meta{margin:12px 4px;font-size:13px;color:var(--muted)}
+/* LAST UPDATED */
+.last-update{
+  margin:10px 6px 0;
+  font-size:13px;
+  color:var(--muted);
+}
 
 /* CHART */
 .chart-box{
   background:var(--panel);
   border:1px solid var(--border);
-  border-radius:14px;
+  border-radius:18px;
   padding:20px;
-  margin-top:24px;
+  margin-top:26px;
 }
-.chart-price{font-size:22px;font-weight:600;margin-bottom:10px}
+.chart-summary{
+  font-size:22px;
+  font-weight:600;
+  margin-bottom:8px;
+}
+.chart-summary .up{color:var(--green)}
+.chart-summary .down{color:var(--red)}
+.chart-summary .flat{color:var(--muted)}
 
 /* TABLE */
 .table-box{
   background:var(--panel);
   border:1px solid var(--border);
-  border-radius:14px;
+  border-radius:18px;
   overflow:hidden;
-  margin-top:30px;
+  margin-top:32px;
 }
-table{width:100%;border-collapse:collapse}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
 th,td{
   padding:12px;
   border-bottom:1px solid var(--border);
   font-size:13px;
 }
-th{color:var(--muted);font-weight:500}
+th{
+  color:var(--muted);
+  font-weight:500;
+}
 
 /* NEWS */
-.news{margin-top:30px}
-.news p{
+.news-box{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  margin-top:32px;
+}
+.news-box h2{
+  font-size:14px;
+  margin:0 0 12px;
+}
+.news-box p{
   font-size:13px;
   color:var(--muted);
   padding:8px 0;
   border-bottom:1px solid var(--border);
 }
-
-/* TEXT */
-.section{margin-top:40px}
-.section h2{font-size:14px;margin-bottom:8px}
-.section p{font-size:13px;color:var(--muted);line-height:1.6}
 
 /* FOOTER */
 footer{
@@ -156,12 +213,12 @@ footer{
 <body>
 
 <div class="header">
-  <div class="brand">Bullion Exchange</div>
+  <button class="brand-btn" onclick="toggleTheme()">Bullion Exchange</button>
   <div class="status" id="marketStatus"></div>
 </div>
 
 <div class="ticker">
-  <div class="ticker-track" id="tickerTrack">Loading market…</div>
+  <div class="ticker-track" id="tickerTrack">Loading market prices…</div>
 </div>
 
 <div class="container">
@@ -185,52 +242,62 @@ footer{
     </div>
   </div>
 
-  <div class="meta">Last Updated: <span id="updated">--</span></div>
+  <div class="last-update">
+    Last Updated: <span id="updated">--</span>
+  </div>
 
   <!-- CHART -->
   <div class="chart-box">
-    <div class="chart-price" id="chartPrice">₹ --</div>
-    <canvas id="chart" height="120"></canvas>
+    <div class="chart-summary" id="chartSummary">₹ --</div>
+    <canvas id="priceChart" height="140"></canvas>
   </div>
 
   <!-- HISTORY -->
   <div class="table-box">
     <table>
       <thead>
-        <tr><th>Date</th><th>Gold</th><th>Silver</th><th>Copper</th></tr>
+        <tr>
+          <th>Date</th>
+          <th>Gold</th>
+          <th>Silver</th>
+          <th>Copper</th>
+        </tr>
       </thead>
       <tbody id="historyTable"></tbody>
     </table>
   </div>
 
   <!-- NEWS -->
-  <div class="news" id="news"></div>
-
-  <!-- ABOUT -->
-  <div class="section">
-    <h2>About Bullion Exchange</h2>
-    <p>
-      Bullion Exchange is a price reference platform operated by the Matangi Group,
-      providing indicative Gold, Silver, and Copper prices.
-    </p>
-  </div>
-
-  <!-- DISCLAIMER -->
-  <div class="section">
-    <h2>Legal Disclaimer</h2>
-    <p>
-      Prices are indicative and for information only. Actual market prices may differ
-      based on purity, taxes, and dealer margins.
-    </p>
+  <div class="news-box">
+    <h2>Market News</h2>
+    <div id="news"></div>
   </div>
 
 </div>
 
-<footer>© Bullion Exchange — A Matangi Group Company</footer>
+<footer>
+  Prices are indicative only. Actual prices may vary.<br>
+  © Bullion Exchange — A Matangi Group Company
+</footer>
 
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbzLuzNFl0G77hfBCSpiMaEg6b8_yqsXobBlrYmvNZLpXTp6ScehlpkNGI0w4ZpPME94Gw/exec";
-let active="gold", history=[], chart;
+let activeMetal="gold", history=[], chart;
+
+/* THEME */
+if(localStorage.getItem("theme")==="light"){
+  document.documentElement.setAttribute("data-theme","light");
+}
+function toggleTheme(){
+  const isLight=document.documentElement.getAttribute("data-theme")==="light";
+  if(isLight){
+    document.documentElement.removeAttribute("data-theme");
+    localStorage.setItem("theme","dark");
+  }else{
+    document.documentElement.setAttribute("data-theme","light");
+    localStorage.setItem("theme","light");
+  }
+}
 
 /* FETCH DATA */
 fetch(API_URL).then(r=>r.json()).then(d=>{
@@ -246,13 +313,14 @@ fetch(API_URL).then(r=>r.json()).then(d=>{
   calc("copper",c.copper,history[0]?.copper);
 
   buildTicker(c,history);
-  fillTable();
   drawChart();
+  fillTable();
   setMarket();
 
   (d.news||[]).forEach(n=>news.innerHTML+=`<p>${n}</p>`);
 });
 
+/* PRICE CHANGE */
 function calc(m,cur,prev){
   const el=document.getElementById(m+"Change");
   if(!prev){el.textContent="—";return}
@@ -262,58 +330,90 @@ function calc(m,cur,prev){
   el.textContent=`${diff>0?"+":"-"}₹${Math.abs(diff)} (${Math.abs(pct)}%)`;
 }
 
-function buildTicker(cur,h){
+/* TICKER */
+function buildTicker(c,h){
   const p=h[0]||{};
   tickerTrack.innerHTML=[
-    tick("Gold",cur.gold,p.gold),
-    tick("Silver",cur.silver,p.silver),
-    tick("Copper",cur.copper,p.copper),
-    tick("Gold",cur.gold,p.gold),
-    tick("Silver",cur.silver,p.silver),
-    tick("Copper",cur.copper,p.copper)
+    tick("Gold",c.gold,p.gold),
+    tick("Silver",c.silver,p.silver),
+    tick("Copper",c.copper,p.copper),
+    tick("Gold",c.gold,p.gold),
+    tick("Silver",c.silver,p.silver),
+    tick("Copper",c.copper,p.copper)
   ].join("");
 }
-
 function tick(n,c,p){
   if(!p) return "";
   const d=c-p, pct=((d/p)*100).toFixed(2);
   const cls=d>0?"tick-up":d<0?"tick-down":"tick-flat";
-  return `<div class="tick-item ${cls}">
+  return `<div class="${cls}">
     ● Bullion Exchange | ${n} ₹${c} ${d>0?"▲":"▼"} ${d>0?"+":""}₹${Math.abs(d)} (${Math.abs(pct)}%)
   </div>`;
 }
 
+/* CHART */
 function drawChart(){
+  const prices=history.map(h=>h[activeMetal]);
+  const dates=history.map(h=>h.date);
+
+  updateSummary(prices.at(-1),prices.at(-2));
+
   if(chart) chart.destroy();
-  chart=new Chart(chart,{
+  chart=new Chart(priceChart,{
     type:"line",
     data:{
-      labels:history.map(()=>""), 
+      labels:dates,
       datasets:[{
-        data:history.map(h=>h[active]),
-        borderColor:active==="gold"? "#d4af37":active==="silver"?"#cfd4dc":"#d08c60",
-        tension:.35
+        data:prices,
+        borderColor:
+          activeMetal==="gold"? "#d4af37":
+          activeMetal==="silver"? "#cfd4dc":"#d08c60",
+        tension:.35,
+        pointRadius:0
       }]
     },
     options:{
-      plugins:{legend:{display:false}},
-      interaction:{mode:"index",intersect:false},
-      scales:{x:{display:false},y:{ticks:{color:"#9aa4b2"}}}
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          callbacks:{
+            title:c=>c[0].label,
+            label:c=>{
+              const i=c.dataIndex;
+              const cur=prices[i], prev=prices[i-1];
+              if(!prev) return `₹ ${cur}`;
+              const diff=cur-prev, pct=((diff/prev)*100).toFixed(2);
+              return [
+                `Price: ₹ ${cur}`,
+                `${diff>0?"+":"-"}₹ ${Math.abs(diff)} (${Math.abs(pct)}%)`
+              ];
+            }
+          }
+        }
+      },
+      scales:{
+        x:{display:false},
+        y:{ticks:{color:"#9aa4b2"}}
+      }
     }
   });
-  chartPrice.textContent="₹ "+history.at(-1)?.[active];
 }
 
-function selectMetal(m){
-  active=m;
-  document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
-  document.getElementById(m+"Card").classList.add("active");
-  drawChart();
+/* SUMMARY */
+function updateSummary(cur,prev){
+  if(!prev){chartSummary.textContent=`₹ ${cur}`;return}
+  const diff=cur-prev, pct=((diff/prev)*100).toFixed(2);
+  const cls=diff>0?"up":diff<0?"down":"flat";
+  chartSummary.innerHTML=`₹ ${cur}
+    <span class="${cls}" style="font-size:14px;margin-left:8px">
+      ${diff>0?"+":"-"}₹ ${Math.abs(diff)} (${Math.abs(pct)}%)
+    </span>`;
 }
 
+/* TABLE */
 function fillTable(){
   historyTable.innerHTML="";
-  history.forEach(h=>{
+  history.slice(0,5).forEach(h=>{
     historyTable.innerHTML+=`
       <tr>
         <td>${h.date}</td>
@@ -324,12 +424,21 @@ function fillTable(){
   });
 }
 
+/* MARKET STATUS */
 function setMarket(){
   const d=new Date().getDay();
   marketStatus.innerHTML=
     d===0?`<span class="dot" style="background:var(--grey)"></span>Holiday`:
     d===6?`<span class="dot" style="background:var(--red)"></span>Closed`:
           `<span class="dot" style="background:var(--green)"></span>Open`;
+}
+
+/* SWITCH METAL */
+function selectMetal(m){
+  activeMetal=m;
+  document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+  document.getElementById(m+"Card").classList.add("active");
+  drawChart();
 }
 </script>
 
